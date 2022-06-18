@@ -1,3 +1,6 @@
 # Output
 output/dist
 output/zip
+
+# Extra
+vuejs/package-lock.json
