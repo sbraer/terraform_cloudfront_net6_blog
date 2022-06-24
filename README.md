@@ -8,16 +8,15 @@ cd .\AWSServerless_test1\AWSServerless_test1\
 dotnet lambda package
 cd ..\..
 ```
-## Second Step
+## Second Step:
 ```
-cd ..\vuejs
+cd vuejs
 npm install
 npm run build
 cd ..
 ```
 ## Third step:
 ```
-cd ..\..
 cd terraform
 terraform init
 terraform plan

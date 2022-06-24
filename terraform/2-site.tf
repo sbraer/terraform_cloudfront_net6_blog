@@ -63,8 +63,9 @@ resource "aws_s3_bucket_object" "json" {
 resource "aws_s3_bucket_object" "url_content" {
   bucket = aws_s3_bucket.site.id  
   key = "extra/url.json"
-  content = "{\"url\": \"https://${aws_cloudfront_distribution.distribution.domain_name}\"}"
+  content = "{\"url\": \"https://${var.apisubdomain}.${var.domain}\"}"
   content_type = "application/json"
+  depends_on = [aws_s3_bucket_object.json]
 }
 ##############################
 
@@ -165,16 +166,6 @@ resource "aws_cloudfront_distribution" "s3_distribution" {
   comment             = "vuejs-cloudfront"
   default_root_object = "index.html"
 
-  # Configure logging here if required 	
-  #logging_config {
-  #  include_cookies = false
-  #  bucket          = "mylogs.s3.amazonaws.com"
-  #  prefix          = "myprefix"
-  #}
-
-  # If you have domain configured use it here 
-  #aliases = ["mywebsite.example.com", "s3-static-web-dev.example.com"]
-
   default_cache_behavior {
     allowed_methods  = ["DELETE", "GET", "HEAD", "OPTIONS", "PATCH", "POST", "PUT"]
     cached_methods   = ["GET", "HEAD"]
@@ -243,8 +234,8 @@ resource "aws_cloudfront_distribution" "s3_distribution" {
 
   restrictions {
     geo_restriction {
-      restriction_type = "whitelist"
-      locations        = ["US", "CA", "GB", "DE", "IN", "IR", "IT"]
+      restriction_type = "none"
+      locations = []
     }
   }
 
@@ -253,7 +244,9 @@ resource "aws_cloudfront_distribution" "s3_distribution" {
     Name        = "my-tag"
   }
 
+  aliases = [var.domain, "www.${var.domain}"]
   viewer_certificate {
-    cloudfront_default_certificate = true
+    ssl_support_method = "sni-only"
+    acm_certificate_arn = data.aws_acm_certificate.cert.arn
   }
 }
