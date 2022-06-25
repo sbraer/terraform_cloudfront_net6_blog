@@ -11,13 +11,13 @@ variable "s3bucketname" {
 variable "domain" {
     description = "Domain name"
     type = string
-    default = "azanisite.com"
+    default = "example.com"
 }
 
 variable "apisubdomain" {
     description = "Api sub Domain name"
     type = string
-    default = "ciccio"
+    default = "api"
 }
 
 variable "region" {
